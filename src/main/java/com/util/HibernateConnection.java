@@ -7,14 +7,20 @@ import com.test.Products;
 
 public class HibernateConnection {
 	
-	
+	public static SessionFactory sf=null;
 	public static SessionFactory getSessionFactory()
 	{
-		Configuration cf=new Configuration();
-		cf.configure();
-		cf.addAnnotatedClass(Products.class);
-		SessionFactory sf = cf.buildSessionFactory();
-		return sf;
+		if(sf==null)
+		{	
+			Configuration cf=new Configuration();
+			cf.configure();
+			cf.addAnnotatedClass(Products.class);
+			return sf = cf.buildSessionFactory();
+		}
+		else
+		{
+			return sf;
+		}
 	}
 
 }
