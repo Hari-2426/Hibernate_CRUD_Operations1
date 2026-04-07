@@ -25,9 +25,48 @@ public class Test {
 		
 		selectOperation();
 		
+		hibernateStates();
 		
 		
 		
+		
+		
+		
+		
+	}
+
+	private static void hibernateStates() {
+		SessionFactory sf = HibernateConnection.getSessionFactory();
+
+		// 🔹 STEP 1: TRANSIENT STATE
+		Products p = new Products(1006, "Refrigerator", 30000.0, "Samsung");
+
+		// 🔹 STEP 2: PERSISTENT STATE
+		Session s1 = sf.openSession();
+		s1.beginTransaction();
+
+		s1.persist(p);  
+
+		p.setPname("Double Door Refrigerator");  
+
+		s1.getTransaction().commit();
+		s1.close();  
+
+		// 🔹 STEP 3: DETACHED STATE
+		p.setPname("LG Refrigerator");  
+		// ❗ Change NOT saved automatically
+
+		// 🔹 STEP 4: REATTACH (Detached → Persistent again)
+		Session s2 = sf.openSession();
+		s2.beginTransaction();
+
+		s2.merge(p);  
+		// 👉 Reattaching detached object
+
+		s2.getTransaction().commit();
+		s2.close();
+
+		System.out.println("All states executed successfully...");
 	}
 
 	private static void updateOperation() {
